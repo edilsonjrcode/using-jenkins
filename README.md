@@ -53,7 +53,7 @@ docker logs jenkins-groovy
 ```
 
 ## Personalização do Jenkins com Groovy
-Coloque seus scripts Groovy no diretório `groovy-scripts/`. Eles serão executados automaticamente quando o container for iniciado pela primeira vez.
+Coloque seus scripts Groovy no diretório `init.groovy.d/`. Eles serão executados automaticamente quando o container for iniciado pela primeira vez.
 
 ### Exemplo de Script Groovy (`groovy-scripts/01-configure-admin.groovy`)
 ```groovy
@@ -68,12 +68,8 @@ instance.setSecurityRealm(hudsonRealm)
 instance.save()
 ```
 
-## Persistência
-O diretório `jenkins_home` é montado como volume para garantir que os dados do Jenkins (jobs, plugins e configurações) sejam preservados entre os reinícios do container.
-
 ## Resolução de Problemas
 - Verifique os logs do container em caso de erros:
   ```bash
   docker logs jenkins-groovy
   ```
-- Certifique-se de que o diretório `jenkins_home` tenha as permissões corretas.
