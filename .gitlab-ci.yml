@@ -1,0 +1,38 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_HOST: "tcp://docker:2376"
+  DOCKER_DRIVER: "overlay2"
+
+build:
+  stage: build
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker build -t my-app ."
+    - docker save -o my-app.tar my-app
+  artifacts:
+    paths:
+      - my-app.tar
+
+test:
+  stage: test
+  image: alpine:latest
+  script:
+    - echo "Running tests..."
+
+deploy:
+  stage: deploy
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  dependencies:
+    - build
+  script:
+    - docker load -i my-app.tar"
+    - docker run -d --name my-app-container my-app
