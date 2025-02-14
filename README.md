@@ -28,23 +28,16 @@ Este repositório fornece uma versão Dockerizada do Jenkins com scripts de inic
 ### Passo 1: Clonar o Repositório
 ```bash
 git clone https://github.com/seu-usuario/jenkins-groovy-docker.git
-cd jenkins-groovy-docker
 ```
 
 ### Passo 2: Construir a Imagem Docker
 ```bash
-docker build -t jenkins-customizado .
+docker build -t meu-jenkins .
 ```
 
 ### Passo 3: Executar o Container do Jenkins
 ```bash
-docker run -d -p 8080:8080 -p 50000:50000 \
-  -v $(pwd)/jenkins_home:/var/jenkins_home \
-  -v $(pwd)/init.groovy.d:/usr/share/jenkins/ref/init.groovy.d \
-  --name jenkins-groovy jenkins-customizado
-```
-```powershell
-docker run -d -p 8080:8080 -p 50000:50000 -v "%cd%\\jenkins_home:/var/jenkins_home" -v "%cd%\\init.groovy.d:/usr/share/jenkins/ref/init.groovy.d" --name jenkins-groovy jenkins-customizado
+docker run -d -p 8080:8080 --name meu-jenkins meu-jenkins
 ```
 
 - **Porta 8080**: Interface Web do Jenkins  
