@@ -36,3 +36,24 @@ deploy:
   script:
     - docker load -i my-app.tar"
     - docker run -d --name my-app-container my-app
+
+deploy_test:
+  stage: deploy_test
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  dependencies:
+    - build
+  before_script:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_TEST" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:
+    - docker load -i my-app.tar
+    - docker tag $DOCKER_IMAGE $DOCKER_IMAGE
+    - docker push $DOCKER_IMAGE
+    - ssh user@$TEST_SERVER_IP "docker pull $DOCKER_IMAGE && docker rm -f my-app-container || true && docker run -d --name my-app-container -p 8080:8080 $DOCKER_IMAGE"

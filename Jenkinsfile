@@ -10,13 +10,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t meu-app .'
+                sh 'docker build -t my-jenkins .'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'docker run --rm meu-app test'
+                sh 'docker run --rm my-jenkins test'
             }
         }
     }
